@@ -1,6 +1,7 @@
 ﻿using DapperCRUDTakrorlashAsyncTaskAndEtc.Data;
 using DapperCRUDTakrorlashAsyncTaskAndEtc.Models;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,40 +12,65 @@ namespace DapperCRUDTakrorlashAsyncTaskAndEtc
     {
         static void Main(string[] args)
         {
+
             /** GetAllAsync done
-            Task.Run(async () =>
+            var students = GetAllAsyncMethod().Result;
+            foreach (var item in students)
             {
+                Console.WriteLine(item.Name);
+            }
+            */
+
+            /** GetAsync done
+            var student = GetAsyncMethod().Result;
+
+            Console.WriteLine(student.Name);
+            */
+
+            /** UpdateAsync done
+            UpdateAsyncMethod().Wait();
+            */
+
+            /**  DeleteAsync done
+            DeleteAsyncMethod().Wait();
+            */
+
+            /** CreateAsync done
+            CreateAsyncMethod().Wait();
+            */
+
+
+
+        }
+
+        public static async Task<IEnumerable<Student>> GetAllAsyncMethod()
+        {
+            
                 IDapper dapper = new Dapperr();
 
                 string query = "SELECT * FROM Students";
                 var students = await dapper.GetAllAsync<Student>(query, null, CommandType.Text);
 
-                foreach (Student student in students)
-                {
-                    Console.WriteLine(student.Name);
-                }
+                return students;
 
-            });
-            Console.ReadKey();
-            */
-            
-            /** GetAsync done
-            Task.Run(async () =>
-            {
+        }
+
+    
+        public static async Task<Student> GetAsyncMethod()
+        {
+           
                 IDapper dapper = new Dapperr();
 
                 string query = "SELECT * FROM Students";
                 var student = await dapper.GetAsync<Student>(query, null, CommandType.Text);
 
-                Console.WriteLine(student.Name);
+            return student;
 
-            });
-              Console.ReadKey();
-            */
+        }
+    
+        public static async Task UpdateAsyncMethod()
+        {
             
-            /**  UpdateAsync done
-            Task.Run(async () =>
-            {
                 while (true)
                 {
                     try
@@ -52,7 +78,7 @@ namespace DapperCRUDTakrorlashAsyncTaskAndEtc
                         IDapper dapper = new Dapperr();
 
                         Console.WriteLine("1. O'zgartirish qilishga roziman , 2. Exit");
-                        
+
                         int chek = int.Parse(Console.ReadLine());
 
                         if (chek == 1)
@@ -98,7 +124,7 @@ namespace DapperCRUDTakrorlashAsyncTaskAndEtc
                                 break;
                             }
                         }
-                        else if(chek == 2) 
+                        else if (chek == 2)
                         {
                             break;
                         }
@@ -114,29 +140,26 @@ namespace DapperCRUDTakrorlashAsyncTaskAndEtc
 
                 }
 
-            });
+            Console.WriteLine("Sucsessfully Update date :)");
+        }
 
-            Thread.Sleep(20000);
-            */
+    
+        public static async Task DeleteAsyncMethod()
+        {
+            IDapper dapper = new Dapperr();
 
-            /** DeleteAsync done
-            Task.Run( async () =>
-            {
-                IDapper dapper = new Dapperr();
+            Console.WriteLine("Qaysi id dagi satrni o'chirmoqchisiz: ");
+            long id = long.Parse(Console.ReadLine());
+            string query = $"DELETE FROM Students WHERE id = {id};";
 
-                Console.WriteLine("Qaysi id dagi satrni o'chirmoqchisiz: ");
-                long id =  long.Parse(Console.ReadLine());
-                string query = $"DELETE FROM Students WHERE id = {id};";
+            await dapper.DeleteAsync<Student>(query, null);
 
-                await dapper.DeleteAsync<Student>(query, null);
-            });
+            Console.WriteLine("Sucsesfully delete date");
+        }
+        
+        public static async Task CreateAsyncMethod()
+        {
 
-            Thread.Sleep(7000);
-            */
-
-            /** CreateAsync done
-            Task.Run(async () =>
-            {
                 IDapper dapper = new Dapperr();
 
                 Console.WriteLine("Entering Name: ");
@@ -152,14 +175,12 @@ namespace DapperCRUDTakrorlashAsyncTaskAndEtc
                 long CourseId = long.Parse(Console.ReadLine());
 
                 string query = "INSERT INTO Students (Name, PhoneNumber, Age, CourseId)" +
-                                $"'{Name}', '{PhoneNumber}', {Age}, {CourseId}";
+                                $"values ('{Name}', '{PhoneNumber}', {Age}, {CourseId});";
+
                 await dapper.CreateAsync<Student>(query, null);
 
-            });
-
-            Thread.Sleep(20000);
-            */
-
+            
         }
+
     }
 }

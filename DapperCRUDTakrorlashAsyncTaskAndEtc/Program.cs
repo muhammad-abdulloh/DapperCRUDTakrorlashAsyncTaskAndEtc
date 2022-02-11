@@ -1,5 +1,6 @@
 ﻿using DapperCRUDTakrorlashAsyncTaskAndEtc.Data;
 using DapperCRUDTakrorlashAsyncTaskAndEtc.Models;
+using DapperCRUDTakrorlashAsyncTaskAndEtc.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,32 +14,36 @@ namespace DapperCRUDTakrorlashAsyncTaskAndEtc
         static void Main(string[] args)
         {
 
-            /** GetAllAsync done
-            var students = GetAllAsyncMethod().Result;
-            foreach (var item in students)
-            {
-                Console.WriteLine(item.Name);
-            }
-            */
+            ////GetAllAsync done
 
-            /** GetAsync done
-            var student = GetAsyncMethod().Result;
 
-            Console.WriteLine(student.Name);
-            */
+
+            // GetAsync done
+
+            //var student = GetStudent(10003);
+
+
+            // Console.WriteLine(student.Name);
+
 
             /** UpdateAsync done
             UpdateAsyncMethod().Wait();
             */
 
-            /**  DeleteAsync done
-            DeleteAsyncMethod().Wait();
-            */
+            /**  DeleteAsync done */
+         //   DeleteAsyncMethod().Wait();
+            
 
-            /** CreateAsync done
+            /** CreateAsync done */
             CreateAsyncMethod().Wait();
-            */
+            
 
+
+            var students = GetAllAsyncMethod().Result;
+            foreach (var item in students)
+            {
+                Console.WriteLine(item.Id + " " + item.Name);
+            }
 
 
         }
@@ -52,22 +57,21 @@ namespace DapperCRUDTakrorlashAsyncTaskAndEtc
                 var students = await dapper.GetAllAsync<Student>(query, null, CommandType.Text);
 
                 return students;
-
+                    
         }
 
-    
-        public static async Task<Student> GetAsyncMethod()
-        {
-           
-                IDapper dapper = new Dapperr();
 
-                string query = "SELECT * FROM Students";
-                var student = await dapper.GetAsync<Student>(query, null, CommandType.Text);
+        public static Student GetStudent(int id)
+        {
+            IDapper dapper = new Dapperr();
+
+            string query = $"select * from Students where id = {id}";
+            var student = dapper.GetAsync<Student>(query, null, CommandType.Text).Result;
 
             return student;
 
         }
-    
+
         public static async Task UpdateAsyncMethod()
         {
             

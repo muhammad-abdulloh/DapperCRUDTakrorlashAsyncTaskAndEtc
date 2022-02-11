@@ -14,17 +14,18 @@ namespace DapperCRUDTakrorlashAsyncTaskAndEtc.Data
 {
     public class Dapperr : IDapper
     {
+        private readonly IDbConnection db; 
+        public Dapperr()
+        {
+            db = GetConnection();
+        }
         async Task IDapper.CreateAsync<T>(string query, DynamicParameters pars)
         {
-            var db = GetConnection();
-
             await db.QueryAsync<T>(query, param: pars);
         }
 
-        async  Task IDapper.DeleteAsync<T>(string query, DynamicParameters pars)
+        public async  Task DeleteAsync<T>(string query, DynamicParameters pars)
         {
-            var db = GetConnection();
-
             await db.QueryAsync<T>(query, param: pars);
         }
 
@@ -37,7 +38,6 @@ namespace DapperCRUDTakrorlashAsyncTaskAndEtc.Data
         public async Task<IEnumerable<T>> GetAllAsync<T>(string query, DynamicParameters pars, CommandType cmdType = CommandType.StoredProcedure)
         {
             // databasa bilan uladik
-            IDbConnection db =  GetConnection();
 
             IEnumerable<T> results = await db.QueryAsync<T>(query,param: pars, commandType : cmdType);
             return results;
@@ -49,9 +49,8 @@ namespace DapperCRUDTakrorlashAsyncTaskAndEtc.Data
             return new SqlConnection(Constants.Constants.CONNECTION_STRING);   
         }
 
-        async Task IDapper.UpdateAsync<T>(string query, DynamicParameters pars)
+        public async Task UpdateAsync<T>(string query, DynamicParameters pars)
         {
-            var db = GetConnection();
 
             await db.QueryAsync<T>(query, param: pars);
 
@@ -59,10 +58,9 @@ namespace DapperCRUDTakrorlashAsyncTaskAndEtc.Data
 
         public async Task<T> GetAsync<T>(string query, DynamicParameters pars, CommandType cmdType = CommandType.StoredProcedure)
         {
-            IDbConnection db = GetConnection();
-
+            
             IEnumerable<T> results = await db.QueryAsync<T>(query, param: pars, commandType: cmdType);
-            return results.FirstOrDefault();
+            return  results.FirstOrDefault();
         }
     }
 }
